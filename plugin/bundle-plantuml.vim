@@ -28,8 +28,9 @@ function! RunPumlJavaCommand()
 
   let s:puml_jar = '~/git/plantuml/plantuml.jar'
 
-  let g:puml_cmd = '!java ' . s:puml_args .  \ ' -jar ' . s:puml_jar .  \ ' "'
-  . expand('%') . '"'
+  let g:puml_cmd = '!java ' . s:puml_args .  
+                 \ ' -jar ' . s:puml_jar .  
+                 \ ' "' . expand('%') . '"'
 
   silent execute g:puml_cmd
 
@@ -41,8 +42,11 @@ function! RunPumlViewCommand()
 
     let g:puml_viewer_open = 1
 
-    let g:puml_view = '!' . g:puml_viewer .  \ ' "'. expand('%<') . '.png"'
-    .  \ ' 2>/dev/null&' silent execute g:puml_view
+    let g:puml_view = '!' . g:puml_viewer .
+                    \ ' "'. expand('%<') . '.png"' .
+                    \ ' 2>/dev/null&'
+
+    silent execute g:puml_view
 
   endif
 endfunction
