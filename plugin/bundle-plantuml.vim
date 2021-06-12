@@ -6,20 +6,29 @@ endif
 let g:loaded_bundle_plantuml=1
 
 " -------------------------------------------------------------------------- }}}
-" {{{ PlantUml functions 
+" {{{ Archlinux and Windows Subsystem for Linux check 
+
+let g:os_arch = trim(system("cat /etc/issue | rg 'Arch Linux' -c"))
+let g:os_wsl  = (substitute(system('uname -r'), '\n', '', '') =~ 'Microsoft') ||
+              \ (substitute(system('uname -r'), '\n', '', '') =~ 'WSL2') 
+             
+" -------------------------------------------------------------------------- }}}
+" {{{ Init UML settings.
 
 function! InitUmlSettings()
 
   let g:puml_viewer_open = 0 
-  let g:puml_wsl = (substitute(system('uname -r'), '\n', '', '') =~ 'Microsoft')
 
-  if g:puml_wsl || has("win32unix")
+  if g:os_arch || has("win32unix")
     let g:puml_viewer = 'SumatraPDF.exe'
   else
     let g:puml_viewer = 'okular'
   endif
 
 endfunction
+
+" -------------------------------------------------------------------------- }}}
+" {{{ Run Plant UML Compile Command 
 
 function! RunPumlJavaCommand()
 
@@ -36,6 +45,9 @@ function! RunPumlJavaCommand()
 
 endfunction
 
+" -------------------------------------------------------------------------- }}}
+" {{{ Run Plant UML View Command 
+
 function! RunPumlViewCommand()
   " Example: !okular "foo.png" 2>/dev/null&
   if !g:puml_viewer_open
@@ -51,10 +63,16 @@ function! RunPumlViewCommand()
   endif
 endfunction
 
+" -------------------------------------------------------------------------- }}}
+" {{{ Generate Uml Diagram 
+
 function! GenerateUmlDiagram()
   call RunPumlJavaCommand()
   call RunPumlViewCommand()
 endfunction
+
+" -------------------------------------------------------------------------- }}}
+" {{{ Clear UML Lanuch Flag
 
 function! ClearUmlLaunchFlag()
   let g:puml_viewer_open = 0
