@@ -1,4 +1,4 @@
-" {{{ bundle-plantuml.vim 
+" {{{ bundle-plantuml.vim
 
 if exists('g:loaded_bundle_plantuml')
   finish
@@ -6,20 +6,20 @@ endif
 let g:loaded_bundle_plantuml=1
 
 " -------------------------------------------------------------------------- }}}
-" {{{ Archlinux and Windows Subsystem for Linux check 
+" {{{ Archlinux and Windows Subsystem for Linux check
 
 let g:os_arch = trim(system("cat /etc/issue | rg 'Arch Linux' -c"))
 let g:os_wsl  = (substitute(system('uname -r'), '\n', '', '') =~ 'Microsoft') ||
-              \ (substitute(system('uname -r'), '\n', '', '') =~ 'WSL2') 
-             
+              \ (substitute(system('uname -r'), '\n', '', '') =~ 'WSL2')
+
 " -------------------------------------------------------------------------- }}}
 " {{{ Init UML settings.
 
 function! InitUmlSettings()
 
-  let g:puml_viewer_open = 0 
+  let g:puml_viewer_open = 0
 
-  if g:os_arch || has("win32unix")
+  if g:os_wsl || has("win32unix")
     let g:puml_viewer = 'SumatraPDF.exe'
   else
     let g:puml_viewer = 'okular'
@@ -28,7 +28,7 @@ function! InitUmlSettings()
 endfunction
 
 " -------------------------------------------------------------------------- }}}
-" {{{ Run Plant UML Compile Command 
+" {{{ Run Plant UML Compile Command
 
 function! RunPumlJavaCommand()
 
@@ -37,8 +37,8 @@ function! RunPumlJavaCommand()
 
   let s:puml_jar = '~/git/plantuml/plantuml.jar'
 
-  let g:puml_cmd = '!java ' . s:puml_args .  
-                 \ ' -jar ' . s:puml_jar .  
+  let g:puml_cmd = '!java ' . s:puml_args .
+                 \ ' -jar ' . s:puml_jar .
                  \ ' "' . expand('%') . '"'
 
   silent execute g:puml_cmd
@@ -46,7 +46,7 @@ function! RunPumlJavaCommand()
 endfunction
 
 " -------------------------------------------------------------------------- }}}
-" {{{ Run Plant UML View Command 
+" {{{ Run Plant UML View Command
 
 function! RunPumlViewCommand()
   " Example: !okular "foo.png" 2>/dev/null&
@@ -64,7 +64,7 @@ function! RunPumlViewCommand()
 endfunction
 
 " -------------------------------------------------------------------------- }}}
-" {{{ Generate Uml Diagram 
+" {{{ Generate Uml Diagram
 
 function! GenerateUmlDiagram()
   call RunPumlJavaCommand()
