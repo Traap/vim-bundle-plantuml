@@ -6,21 +6,13 @@ endif
 let g:loaded_bundle_plantuml=1
 
 " -------------------------------------------------------------------------- }}}
-" {{{ Archlinux and Windows Subsystem for Linux check
-
-let g:os_arch = trim(system("cat /etc/issue | rg 'Arch Linux' -c"))
-
-let s:os_wsl = trim(system('uname -r'))
-let g:os_wsl  = (s:os_wsl =~ 'Microsoft') || (s:os_wsl =~ 'WSL2')
-
-" -------------------------------------------------------------------------- }}}
 " {{{ Init UML settings.
 
 function! InitUmlSettings()
 
   let g:puml_viewer_open = 0
 
-  if g:os_wsl || has("win32unix")
+  if has("wsl") || has("win32unix")
     let g:puml_viewer = 'SumatraPDF.exe'
   else
     let g:puml_viewer = 'okular'
