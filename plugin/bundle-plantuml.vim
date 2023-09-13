@@ -6,24 +6,28 @@ endif
 let g:loaded_bundle_plantuml=1
 
 " -------------------------------------------------------------------------- }}}
-" {{{ Init UML settings.
+" {{{ Initialize pdf viewer
 
-function! InitUmlSettings()
+let g:puml_viewer_open = 0
 
-  let g:puml_viewer_open = 0
+if has("wsl") || has("win32unix")
+  let g:puml_viewer = 'SumatraPDF.exe'
+else
+  let g:puml_viewer = 'okular'
+endif
 
-  if has("wsl") || has("win32unix")
-    let g:puml_viewer = 'SumatraPDF.exe'
-  else
-    let g:puml_viewer = 'okular'
-  endif
+" -------------------------------------------------------------------------- }}}
+" {{{ Initialize global commands.
 
-endfunction
+command! PlantUmlClear    call s:plantuml_clear()
+command! PlantUmlAssemble call s:plantuml_assemble_diagram()
+command! PlantUmlCompile  call s:plantuml_compile_diagram()
+command! PlantUmlView     call s:plantuml_view_diagram()
 
 " -------------------------------------------------------------------------- }}}
 " {{{ Run Plant UML Compile Command
 
-function! RunPumlJavaCommand()
+function! s:plantuml_compile_diagram() abort
 
   " Example: !java -Djava.awt.headless=true "foo.puml"
   let s:puml_args = '-Djava.awt.headless=true'
@@ -41,7 +45,7 @@ endfunction
 " -------------------------------------------------------------------------- }}}
 " {{{ Run Plant UML View Command
 
-function! RunPumlViewCommand()
+function! s:plantuml_view_diagram() abort
   " Example: !okular "foo.png" 2>/dev/null&
   if !g:puml_viewer_open
 
@@ -59,15 +63,15 @@ endfunction
 " -------------------------------------------------------------------------- }}}
 " {{{ Generate Uml Diagram
 
-function! GenerateUmlDiagram()
-  call RunPumlJavaCommand()
-  call RunPumlViewCommand()
+function! s:plantuml_assemble_diagram() abort
+  call s:plantuml_compile_diagram()
+  call s:plantuml_view_diagram()
 endfunction
 
 " -------------------------------------------------------------------------- }}}
 " {{{ Clear UML Lanuch Flag
 
-function! ClearUmlLaunchFlag()
+function! s:plantuml_clear() abort
   let g:puml_viewer_open = 0
 endfunction
 
