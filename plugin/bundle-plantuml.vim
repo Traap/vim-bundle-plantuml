@@ -32,7 +32,7 @@ function! s:plantuml_compile_diagram() abort
   " Example: !java -Djava.awt.headless=true "foo.puml"
   let s:puml_args = '-Djava.awt.headless=true'
 
-  let s:puml_jar = '~/git/plantuml/plantuml.jar'
+  let s:puml_jar = '$GITHOME/plantuml/plantuml.jar'
 
   let g:puml_cmd = '!java ' . s:puml_args .
                  \ ' -jar ' . s:puml_jar .
