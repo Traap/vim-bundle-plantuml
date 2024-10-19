@@ -10,10 +10,11 @@ let g:loaded_bundle_plantuml=1
 
 let g:puml_viewer_open = 0
 
-if has("wsl") || has("win32unix")
-  let g:puml_viewer = 'SumatraPDF.exe'
+let s:pdf_viewer = getenv('PDF_VIEWER')
+if !empty(s:pdf_viewer)
+  let g:traap_pdf_viewer = s:pdf_viewer
 else
-  let g:puml_viewer = 'okular'
+  echo "Warning: PDF_VIEWER is not defined."
 endif
 
 " -------------------------------------------------------------------------- }}}
