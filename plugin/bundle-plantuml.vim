@@ -11,10 +11,9 @@ let g:loaded_bundle_plantuml=1
 let g:puml_viewer_open = 0
 
 let s:pdf_viewer = getenv('PDF_VIEWER')
-if !empty(s:pdf_viewer)
-  let g:traap_pdf_viewer = s:pdf_viewer
-else
+if empty(s:pdf_viewer)
   echo "Warning: PDF_VIEWER is not defined."
+  finish
 endif
 
 " -------------------------------------------------------------------------- }}}
@@ -52,7 +51,7 @@ function! s:plantuml_view_diagram() abort
 
     let g:puml_viewer_open = 1
 
-    let g:puml_view = '!' . g:puml_viewer .
+    let g:puml_view = '!' . s:pdf_viewer .
                     \ ' "'. expand('%<') . '.png"' .
                     \ ' 2>/dev/null&'
 
