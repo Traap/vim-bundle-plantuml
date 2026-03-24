@@ -11,9 +11,21 @@ let g:loaded_bundle_plantuml=1
 let g:puml_viewer_open = 0
 
 let s:pdf_viewer = getenv('PDF_VIEWER')
+<<<<<<< HEAD
 if empty(s:pdf_viewer)
   echo "Warning: PDF_VIEWER is not defined."
   finish
+||||||| parent of 4120249 (State where PDF_VIEW is not defined.)
+if !empty(s:pdf_viewer)
+  let g:traap_pdf_viewer = s:pdf_viewer
+else
+  echo "Warning: PDF_VIEWER is not defined."
+=======
+if s:pdf_viewer != v:null && !empty(s:pdf_viewer)
+  let g:traap_pdf_viewer = s:pdf_viewer
+else
+  echo "Warning: (plantuml) PDF_VIEWER is not defined."
+>>>>>>> 4120249 (State where PDF_VIEW is not defined.)
 endif
 
 " -------------------------------------------------------------------------- }}}
