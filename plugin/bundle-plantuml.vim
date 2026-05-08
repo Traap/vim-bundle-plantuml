@@ -9,6 +9,7 @@ let g:loaded_bundle_plantuml=1
 " {{{ Initialize pdf viewer
 
 let g:puml_viewer_open = 0
+let s:puml_executable = '/usr/sbin/plantuml'
 
 let s:pdf_viewer = getenv('PDF_VIEWER')
 if s:pdf_viewer != v:null && !empty(s:pdf_viewer)
@@ -28,19 +29,39 @@ command! PlantUmlView     call s:plantuml_view_diagram()
 " -------------------------------------------------------------------------- }}}
 " {{{ Run Plant UML Compile Command
 
+function! s:plantuml_java_options() abort
+  let l:headless = '-Djava.awt.headless=true'
+  let l:current = $JAVA_TOOL_OPTIONS
+
+  if empty(l:current)
+    return l:headless
+  endif
+
+  if l:current =~# '\V-Djava.awt.headless='
+    return l:current
+  endif
+
+  return l:headless . ' ' . l:current
+endfunction
+
 function! s:plantuml_compile_diagram() abort
+  if !executable(s:puml_executable)
+    echoerr '(plantuml) ' . s:puml_executable . ' is not executable.'
+    return
+  endif
 
-  " Example: !java -Djava.awt.headless=true "foo.puml"
-  let s:puml_args = '-Djava.awt.headless=true'
+  let l:save_java_tool_options = $JAVA_TOOL_OPTIONS
+  let $JAVA_TOOL_OPTIONS = s:plantuml_java_options()
 
-  let s:puml_jar = '$GITHOME/plantuml/plantuml.jar'
+  try
+    call system([s:puml_executable, '-tpng', expand('%:p')])
+  finally
+    let $JAVA_TOOL_OPTIONS = l:save_java_tool_options
+  endtry
 
-  let g:puml_cmd = '!java ' . s:puml_args .
-                 \ ' -jar ' . s:puml_jar .
-                 \ ' "' . expand('%') . '"'
-
-  silent execute g:puml_cmd
-
+  if v:shell_error != 0
+    echoerr '(plantuml) PNG generation failed for ' . expand('%:p')
+  endif
 endfunction
 
 " -------------------------------------------------------------------------- }}}
